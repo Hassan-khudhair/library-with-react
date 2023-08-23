@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import HomePage from "./components/HomePage";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import BooksDesc from './components/BooksDesc'
+import BookDescSearch from './components/BookDescSearch'
+import Allbooks from "./components/Allbooks";
+import { useState } from "react";
+import { Data } from "./Books";
 
 function App() {
+  const [search,setsearch]=useState('');
+  
+  const textSearch=Data.filter(item=>item.title.includes(search) || item.author.includes(search))
+
+  const handleSearch = (e) => {
+    setsearch(e.target.value)
+  }
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ position: 'relative' }}>
+      <Navbar handleSearch={handleSearch} />
+      <BrowserRouter> 
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/Allbook' element={<Allbooks textSearch={textSearch} search={search}/>} />
+          <Route path='/Allbook/:id' element={<BooksDesc />} />
+          <Route path='/Allbook/search/:id' element={<BookDescSearch textSearch={textSearch}/>} />
+        </Routes>
+      </BrowserRouter>
+
+      <Footer />
     </div>
   );
 }
